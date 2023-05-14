@@ -57,6 +57,7 @@ button:active{
   display: block;
   padding-left: 5%;
   padding-right: 5%;
+  width: auto;
   overflow: auto;
   align-items: center;
 }
