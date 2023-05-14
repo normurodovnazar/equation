@@ -25,14 +25,13 @@ function p(){
   if(Number.isInteger(a) && Number.isInteger(b) && Number.isInteger(c)){
     "\\[ a{x^2} + bx + c = 0 \\]"
     eq = eq.replace("a",Math.abs(a)==1 ? a>0 ? "" : "-" : a)
-    if(c==0) eq = eq.replace("+c","");
-    if(b==0) eq = eq.replace("+bx","");
+    if(c==0) eq = eq.replace("+ c","");
+    if(b==0) eq = eq.replace("+ bx","");
     if(b>0) eq = eq.replace("b",b==1 ? "" : b);
     if(c>0) eq = eq.replace("c",c);
     if(b<0) if(b!=-1) eq = eq.replace("+ b",b); else eq = eq.replace("+ bx","-x")
     if(c<0) eq = eq.replace("+ c",c);
     if(a<0) {
-      
       dApplied = dFormula.replace("aa","\\left( aa \\right)");
       x1Applied = x1Formula.replace("aa","\\left( aa \\right)");
       x2Applied = x2Formula.replace("aa","\\left( aa \\right)");
@@ -60,8 +59,8 @@ function p(){
         x2Calculated = x2Calculated.replace("\\sqrt {DD}",rootD)
         x1Calculated1 = "\\frac{aa}{bb}=".replace("aa",String(-b-rootD)).replace("bb",2*a);
         x2Calculated1 = "\\frac{aa}{bb}=".replace("aa",String(-b+rootD)).replace("bb",2*a);
-        x1 = findDivision(-b-rootD,2*a);
-        x2 = findDivision(-b+rootD,2*a);
+        if(-b-rootD!=0) x1 = findDivision(-b-rootD,2*a); else x1 = 0
+        if(-b+rootD!=0) x2 = findDivision(-b+rootD,2*a); else x2 = 0
       }else{
         dCeoff = findDCeoff(D)
         underRoot = D/(dCeoff*dCeoff)
@@ -70,24 +69,30 @@ function p(){
         if(dCeoff!=1){
           x1Calculated = x1Calculated.replace("yy",dCeoff)
           x2Calculated = x2Calculated.replace("yy",dCeoff)
-          ekub = findEKUB(b,dCeoff,2*a);
-          if(ekub!=1){
-          x1Calculated1="\\frac{{aa\\left( {bb - cc\\sqrt {dd} } \\right)}}{{aa \\cdot ff}}="
-          x2Calculated1="\\frac{{aa\\left( {bb + cc\\sqrt {dd} } \\right)}}{{aa \\cdot ff}}="
-          x1Calculated2="\\frac{{\\cancel{aa}\\left( {bb - cc\\sqrt {dd} } \\right)}}{{\\cancel{aa} \\cdot ff}}="
-          x2Calculated2="\\frac{{\\cancel{aa}\\left( {bb + cc\\sqrt {dd} } \\right)}}{{\\cancel{aa} \\cdot ff}}="
-          x1Calculated1 = apply(x1Calculated1)
-          x2Calculated1 = apply(x2Calculated1)
-          x1Calculated2 = apply(x1Calculated2)
-          x2Calculated2 = apply(x2Calculated2)
-          if(2*a/ekub==1){
-            x1 = "aa - bb\\sqrt {cc}".replace("aa",String(-b/ekub)).replace("bb",dCeoff/ekub==1 ? "" : dCeoff/ekub).replace("cc",underRoot); 
-            x2 = "aa + bb\\sqrt {cc}".replace("aa",String(-b/ekub)).replace("bb",dCeoff/ekub==1 ? "" : dCeoff/ekub).replace("cc",underRoot); 
-          }
-          else{
-            x1 = "\\frac{{aa - bb\\sqrt {cc} }}{dd}".replace("aa",-b/ekub).replace("bb",dCeoff/ekub==1 ? "" : dCeoff/ekub).replace("cc",underRoot).replace("dd",2*a/ekub)
-            x2 = "\\frac{{aa + bb\\sqrt {cc} }}{dd}".replace("aa",-b/ekub).replace("bb",dCeoff/ekub==1 ? "" : dCeoff/ekub).replace("cc",underRoot).replace("dd",2*a/ekub)
-          }
+          if(b!=0){
+            ekub = findEKUB(b,dCeoff,2*a);
+            if(ekub!=1){
+            x1Calculated1="\\frac{{aa\\left( {bb - cc\\sqrt {dd} } \\right)}}{{aa \\cdot ff}}="
+            x2Calculated1="\\frac{{aa\\left( {bb + cc\\sqrt {dd} } \\right)}}{{aa \\cdot ff}}="
+            x1Calculated2="\\frac{{\\cancel{aa}\\left( {bb - cc\\sqrt {dd} } \\right)}}{{\\cancel{aa} \\cdot ff}}="
+            x2Calculated2="\\frac{{\\cancel{aa}\\left( {bb + cc\\sqrt {dd} } \\right)}}{{\\cancel{aa} \\cdot ff}}="
+            x1Calculated1 = apply(x1Calculated1)
+            x2Calculated1 = apply(x2Calculated1)
+            x1Calculated2 = apply(x1Calculated2)
+            x2Calculated2 = apply(x2Calculated2)
+            if(2*a/ekub==1){
+              x1 = "aa - bb\\sqrt {cc}".replace("aa",String(-b/ekub)).replace("bb",dCeoff/ekub==1 ? "" : dCeoff/ekub).replace("cc",underRoot); 
+              x2 = "aa + bb\\sqrt {cc}".replace("aa",String(-b/ekub)).replace("bb",dCeoff/ekub==1 ? "" : dCeoff/ekub).replace("cc",underRoot); 
+            }else{
+              x1 = "\\frac{{aa - bb\\sqrt {cc} }}{dd}".replace("aa",-b/ekub).replace("bb",dCeoff/ekub==1 ? "" : dCeoff/ekub).replace("cc",underRoot).replace("dd",2*a/ekub)
+              x2 = "\\frac{{aa + bb\\sqrt {cc} }}{dd}".replace("aa",-b/ekub).replace("bb",dCeoff/ekub==1 ? "" : dCeoff/ekub).replace("cc",underRoot).replace("dd",2*a/ekub)
+            }
+            }
+          } else {
+            x1Calculated1="\\frac{{ - yy\\sqrt {zz} }}{tt}=".replace("yy",dCeoff).replace("zz",underRoot).replace("tt",2*a)
+            x2Calculated1="\\frac{{ yy\\sqrt {zz} }}{tt}=".replace("yy",dCeoff).replace("zz",underRoot).replace("tt",2*a)
+            x1 = specialCase("-\\frac{{ yy\\sqrt {zz} }}{tt}")
+            x2 = specialCase("\\frac{{ yy\\sqrt {zz} }}{tt}")
           }
         } else{
           x1Calculated = x1Calculated.replace("yy","").replace("=","")
@@ -103,14 +108,21 @@ function p(){
           x1Calculation.innerHTML = "\\["+x1Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x1Calculated+x1Calculated1+x1+" \\]";
           x2Calculation.innerHTML = "\\["+x2Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x2Calculated+x2Calculated1+x2+" \\]";
         } else{
-          if(dCeoff!=1) if(ekub!=1){
+          if(dCeoff!=1){
+            if(b!=0)
+          if(ekub!=1){
             x1Calculation.innerHTML = "\\["+x1Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x1Calculated+x1Calculated1+x1Calculated2+x1+" \\]";
             x2Calculation.innerHTML = "\\["+x2Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x2Calculated+x2Calculated1+x2Calculated2+x2+" \\]";
-          }
-          else {
+          }else {
             x1Calculation.innerHTML = "\\["+x1Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x1Calculated+x1Calculated1+" \\]";
             x2Calculation.innerHTML = "\\["+x2Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x2Calculated+x2Calculated1+" \\]";
-          } else {
+          }
+          else {
+            x1Calculation.innerHTML = "\\["+x1Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x1Calculated+x1Calculated1+x1+" \\]";
+            x2Calculation.innerHTML = "\\["+x2Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x2Calculated+x2Calculated1+x2+" \\]";
+          }
+        }
+        else {
             x1Calculation.innerHTML = "\\["+x1Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x1Calculated+" \\]";
             x2Calculation.innerHTML = "\\["+x2Applied.replace("aa",String(a)).replace("bb",String(b)).replace("DD",String(D))+x2Calculated+" \\]";
           }
@@ -142,6 +154,17 @@ function findDivision(n,m){
   }
   return fin;
 }
+
+function specialCase(s){
+  var k = s.replace("zz",underRoot);
+  e = findEK(dCeoff,2*a);
+  k = k.replace("yy",dCeoff/e==1 ? "" : dCeoff/e);
+  if(2*a/e!=1) return k.replace("tt",2*a/e); else{
+    return "yy\\sqrt {zz}".replace("zz",underRoot).replace("yy",dCeoff/e==1 ? "" : dCeoff/e)
+  }
+}
+
+
 
 function apply(s){
   var k = s.replace("aa",String(ekub)).replace("aa",String(ekub)).replace("bb",String(-b/ekub)).replace("cc",dCeoff/ekub!=1 ? String(dCeoff/ekub) : "").replace("dd",underRoot)
