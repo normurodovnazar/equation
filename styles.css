@@ -61,3 +61,11 @@ button:active{
   overflow: auto;
   align-items: center;
 }
+
+.tel{
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+  font-style: normal;
+  font-size: 18px;
+}
